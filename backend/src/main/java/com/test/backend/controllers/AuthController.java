@@ -1,6 +1,6 @@
 package com.test.backend.controllers;
 
-import com.test.backend.models.User;
+import com.test.backend.models.CustomUser;
 import com.test.backend.services.users.UserServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody CustomUser user) {
         userServices.register(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("user registered");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody CustomUser user) {
+        String token = userServices.login(user);
+        return ResponseEntity.status(HttpStatus.OK).body(token);
     }
 }

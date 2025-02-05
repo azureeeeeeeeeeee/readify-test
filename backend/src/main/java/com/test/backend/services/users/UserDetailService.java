@@ -1,6 +1,6 @@
 package com.test.backend.services.users;
 
-import com.test.backend.models.User;
+import com.test.backend.models.CustomUser;
 import com.test.backend.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,10 +19,14 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> tempUser = userRepository.findByUsername(username);
+        Optional<CustomUser> tempUser = userRepository.findByUsername(username);
         if (tempUser.isPresent()) {
-            User user = tempUser.get();
-            return org.springframework.security.core.userdetails.User.withUsername(user.getUsername()).password(user.getPassword()).build();
+            CustomUser user = tempUser.get();
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(user.getUsername())
+                    .password(user.getPassword())
+                    .authorities(user.getIsAdmin() ? "ADMIN" : "USER")
+                    .build();
         }
         return null;
     }
