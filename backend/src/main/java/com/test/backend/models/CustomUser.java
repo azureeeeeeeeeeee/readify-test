@@ -1,5 +1,6 @@
 package com.test.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ public class CustomUser {
     public String password;
 
     @Column(name = "is_admin", nullable = false)
+    @JsonProperty("is_admin")
     public boolean isAdmin;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
