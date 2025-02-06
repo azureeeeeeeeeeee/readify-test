@@ -15,7 +15,7 @@ public class BookControllers {
         this.bookServices = bookServices;
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<JsonResponse<Void>> createBook(@RequestBody Book book) {
         return bookServices.create(book);
     }
@@ -28,6 +28,16 @@ public class BookControllers {
     @DeleteMapping("/{isbn}")
     public ResponseEntity<JsonResponse<Object>> deleteBook(@PathVariable String isbn) {
         return bookServices.delete(isbn);
+    }
+
+    @GetMapping("/{isbn}")
+    public ResponseEntity<JsonResponse<Object>> findOne(@PathVariable String isbn) {
+        return bookServices.findOne(isbn);
+    }
+
+    @GetMapping()
+    public ResponseEntity<JsonResponse<Object>> findAll() {
+        return bookServices.findAll();
     }
 
 }

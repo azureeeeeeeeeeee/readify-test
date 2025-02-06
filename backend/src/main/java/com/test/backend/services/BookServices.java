@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -98,6 +99,34 @@ public class BookServices {
 
         bookRepository.delete(book);
         response.setMessage("Book with isbn " + isbn + " successfully deleted");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    // Find One
+    public ResponseEntity<JsonResponse<Object>> findOne(String isbn) {
+        Optional<Book> book = bookRepository.findById(isbn);
+        JsonResponse<Object> response = new JsonResponse<>();
+
+        if (book.isEmpty()) {
+            response.setMessage("Book with isbn " + isbn + " is not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        response.setMessage("Book with isbn " + isbn + " fetched");
+        response.setData(new BookDTO(book.get()));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    // Find all
+    public ResponseEntity<JsonResponse<Object>> findAll() {
+        JsonResponse<Object> response = new JsonResponse<>();
+        List<Book> books = bookRepository.findAll();
+        List<BookDTO> bookDTOs = books.stream().map(BookDTO::new).toList();
+
+        response.setMessage("All books fetched");
+        response.setData(bookDTOs);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
