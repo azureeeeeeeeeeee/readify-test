@@ -40,10 +40,7 @@ public class UserServices {
         );
 
         Authentication authentication = manager.authenticate(token);
-        System.out.println(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        System.out.println("generating token. . .");
         User userDetails = (User) authentication.getPrincipal();
         Optional<CustomUser> customUser = userRepository.findByUsername(userDetails.getUsername());
         return JwtUtils.generateToken(customUser);

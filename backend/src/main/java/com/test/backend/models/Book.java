@@ -26,10 +26,11 @@ public class Book {
     @JoinColumn(name = "added_by")
     public CustomUser addedBy;
 
-    public Book(String imageURL, String isbn, String title, CustomUser addedBy) {
+    public Book(String imageURL, String isbn, String title, String description, CustomUser addedBy) {
         this.imageURL = imageURL;
         this.isbn = isbn;
         this.title = title;
+        this.description = description;
         this.addedBy = addedBy;
     }
 
@@ -66,5 +67,13 @@ public class Book {
 
     public void setAddedBy(CustomUser addedBy) {
         this.addedBy = addedBy;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -1,5 +1,6 @@
 package com.test.backend.controllers;
 
+import com.test.backend.DTO.JsonResponse;
 import com.test.backend.models.Book;
 import com.test.backend.services.BookServices;
 import com.test.backend.utilities.UserUtils;
@@ -16,8 +17,13 @@ public class BookControllers {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> create(@RequestBody Book book) {
+    public ResponseEntity<JsonResponse<Void>> create(@RequestBody Book book) {
         return bookServices.create(book);
+    }
+
+    @PutMapping("/{isbn}")
+    public ResponseEntity<JsonResponse<Object>> update(@PathVariable String isbn, @RequestBody Book book) {
+        return bookServices.update(isbn, book);
     }
 
 }
