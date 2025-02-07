@@ -1,9 +1,6 @@
 package com.test.backend.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,11 +15,14 @@ public class Review {
     @NotNull
     public Integer id;
 
-    @Column(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @NotNull
     public CustomUser user_id;
 
-    @Column(name = "book_id")
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    @NotNull
     public Book book_id;
 
     @Column(name = "rating")
