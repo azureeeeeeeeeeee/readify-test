@@ -12,41 +12,37 @@ import java.time.LocalDateTime;
 @Table(name = "reviews")
 public class Review {
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @NotNull
-    public CustomUser user_id;
+    public CustomUser user;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
-    @NotNull
-    public Book book_id;
+    public Book book;
 
     @Column(name = "rating")
     @NotNull
-    @NotBlank
     public Integer rating;
 
     @Column(name = "comment")
     @NotNull
-    @NotBlank
     public String comment;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     public LocalDateTime createdAt;
 
-    public Review(Integer id, String comment, Integer rating, Book book_id, CustomUser user_id) {
+    public Review() {
+    }
+
+    public Review(Integer id, String comment, Integer rating, Book book, CustomUser user) {
         this.id = id;
         this.comment = comment;
         this.rating = rating;
-        this.book_id = book_id;
-        this.user_id = user_id;
-    }
-
-    public Review() {
+        this.book = book;
+        this.user = user;
     }
 
     public Integer getId() {
@@ -57,20 +53,20 @@ public class Review {
         this.id = id;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public CustomUser getUser() {
+        return user;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setUser(CustomUser user) {
+        this.user = user;
     }
 
-    public String getComment() {
-        return comment;
+    public Book getBook() {
+        return book;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     public Integer getRating() {
@@ -81,19 +77,19 @@ public class Review {
         this.rating = rating;
     }
 
-    public CustomUser getUser_id() {
-        return user_id;
+    public String getComment() {
+        return comment;
     }
 
-    public void setUser_id(CustomUser user_id) {
-        this.user_id = user_id;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public Book getBook_id() {
-        return book_id;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setBook_id(Book book_id) {
-        this.book_id = book_id;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
