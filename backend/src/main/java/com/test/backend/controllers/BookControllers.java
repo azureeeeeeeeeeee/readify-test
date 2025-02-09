@@ -40,4 +40,9 @@ public class BookControllers {
         return bookServices.findAll();
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<JsonResponse<Object>> search(@RequestParam String keyword) {
+        return bookServices.search(keyword, keyword);
+    }
+
 }

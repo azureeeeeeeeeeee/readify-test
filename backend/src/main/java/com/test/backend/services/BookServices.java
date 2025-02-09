@@ -7,13 +7,10 @@ import com.test.backend.models.CustomUser;
 import com.test.backend.permissions.BookPermissions;
 import com.test.backend.repositories.BookRepository;
 import com.test.backend.utilities.UserUtils;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,6 +124,25 @@ public class BookServices {
 
         response.setMessage("All books fetched");
         response.setData(bookDTOs);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    // Search
+    public ResponseEntity<JsonResponse<Object>> search(String title, String description) {
+        JsonResponse<Object> response = new JsonResponse<>();
+
+        System.out.println(title + description);
+
+        List<Book> allBooks = bookRepository.findByTitleContainingOrDescriptionContaining(title, description);
+        List<BookDTO> bookDTOs = allBooks.stream().map(BookDTO::new).toList();
+
+        System.out.println(allBooks);
+        System.out.println(bookDTOs);
+
+        response.setMessage("Search result for keyword " + title);
+        response.setData(bookDTOs);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
