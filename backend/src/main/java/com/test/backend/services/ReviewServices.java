@@ -2,6 +2,7 @@ package com.test.backend.services;
 
 import com.test.backend.DTO.AuthResult;
 import com.test.backend.DTO.JsonResponse;
+import com.test.backend.DTO.ReviewDTO;
 import com.test.backend.models.Book;
 import com.test.backend.models.Review;
 import com.test.backend.permissions.ReviewPermissions;
@@ -53,8 +54,66 @@ public class ReviewServices {
         review.setUser(userUtils.getUser());
 
         response.setMessage("Your review successfully saved");
-        response.setData(reviewRepository.save(review));
+        response.setData(new ReviewDTO(reviewRepository.save(review)));
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+
+    // Delete Review
+    public ResponseEntity<JsonResponse<Object>> deleteReview(Integer id) {
+        Optional<Review> checkReview = reviewRepository.findById(id);
+        JsonResponse<Object> response = new JsonResponse<>();
+        if (checkReview.isEmpty()) {
+            response.setMessage("Book with id " + id + " does not exists");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        Review review = checkReview.get();
+
+        // Authorization
+        AuthResult authResult = reviewPermissions.checkDelete(review);
+        if (!authResult.isAllowed()) {
+            response.setMessage(authResult.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        reviewRepository.delete(review);
+        response.setMessage("Review with id " + id + " is successfully deleted");
+
+        return ResponseEntity.ok(response);
+    }
+
+
+
+    // Update Review
+    public ResponseEntity<JsonResponse<Object>> updateReview(Integer id, Review review) {
+        Optional<Review> checkReview = reviewRepository.findById(id);
+        JsonResponse<Object> response = new JsonResponse<>();
+        if (checkReview.isEmpty()) {
+            response.setMessage("Review with id " + id + " does not exists");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        Review currReview = checkReview.get();
+
+        // Authorization
+        AuthResult authResult = reviewPermissions.checkUpdate(currReview);
+        if (!authResult.isAllowed()) {
+            response.setMessage(authResult.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        currReview.setComment(review.getComment());
+        currReview.setRating(review.getRating());
+
+        response.setMessage("Review with id " + id + " sucessfully updated");
+        response.setData(new ReviewDTO(reviewRepository.save(currReview)));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+
+    // Find by book
+
 }

@@ -20,4 +20,15 @@ public class ReviewController {
         return reviewServices.createReview(isbn, review);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<JsonResponse<Object>> deleteReview(@PathVariable Integer id) {
+        return reviewServices.deleteReview(id);
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<JsonResponse<Object>> updateReview(@PathVariable Integer id, @RequestBody Review review) {
+        return reviewServices.updateReview(id, review);
+    }
+
 }

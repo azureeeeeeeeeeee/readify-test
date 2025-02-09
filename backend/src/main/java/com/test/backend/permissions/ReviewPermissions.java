@@ -23,4 +23,20 @@ public class ReviewPermissions {
 
         return new AuthResult(true, null);
     }
+
+    public AuthResult checkDelete(Review review) {
+        if (!userUtils.getAdminStatus() && review.getUser().getId() != userUtils.getUserId()) {
+            return new AuthResult(false, "You are not authorized");
+        }
+        return new AuthResult(true, null);
+    }
+
+
+    public AuthResult checkUpdate(Review review) {
+        if (review.getUser().getId() != userUtils.getUserId()) {
+            return new AuthResult(false, "You are not authorized");
+        }
+
+        return new AuthResult(true, null);
+    }
 }
