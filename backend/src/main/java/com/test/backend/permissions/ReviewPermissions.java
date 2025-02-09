@@ -39,4 +39,12 @@ public class ReviewPermissions {
 
         return new AuthResult(true, null);
     }
+
+    public AuthResult checkFindAll() {
+        if (!userUtils.getAdminStatus()) {
+            return new AuthResult(false, "You are not authorized");
+        }
+
+        return new AuthResult(true, null);
+    }
 }

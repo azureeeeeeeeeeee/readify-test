@@ -1,9 +1,7 @@
 package com.test.backend.utilities;
 
-import com.test.backend.models.Book;
 import com.test.backend.models.CustomUser;
 import com.test.backend.repositories.UserRepository;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -18,33 +16,43 @@ public class UserUtils {
     }
 
     public CustomUser getUser() {
-        String subject = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        String[] parts = subject.split(":");
+        try {
+            String subject = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            String[] parts = subject.split(":");
 
-        if (parts.length != 2) return null;
+            if (parts.length != 2) return null;
 
-        Integer userId = Integer.parseInt(parts[0]);
-
-        Optional<CustomUser> currUser = userRepository.findById(userId);
-
-        return currUser.orElse(null);
+            Integer userId = Integer.parseInt(parts[0]);
+            Optional<CustomUser> currUser = userRepository.findById(userId);
+            return currUser.orElse(null);
+        } catch (NullPointerException | NumberFormatException e) {
+            return null;
+        }
     }
 
     public Integer getUserId() {
-        String subject = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        String[] parts = subject.split(":");
+        try {
+            String subject = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            String[] parts = subject.split(":");
 
-        if (parts.length != 2) return null;
+            if (parts.length != 2) return null;
 
-        return Integer.parseInt(parts[0]);
+            return Integer.parseInt(parts[0]);
+        } catch (NullPointerException | NumberFormatException e) {
+            return null;
+        }
     }
 
     public Boolean getAdminStatus() {
-        String subject = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        String[] parts = subject.split(":");
+        try {
+            String subject = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            String[] parts = subject.split(":");
 
-        if (parts.length != 2) return null;
+            if (parts.length != 2) return false;
 
-        return Boolean.parseBoolean(parts[1]);
+            return Boolean.parseBoolean(parts[1]);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 }

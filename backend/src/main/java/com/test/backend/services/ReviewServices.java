@@ -1,6 +1,7 @@
 package com.test.backend.services;
 
 import com.test.backend.DTO.AuthResult;
+import com.test.backend.DTO.BookDTO;
 import com.test.backend.DTO.JsonResponse;
 import com.test.backend.DTO.ReviewDTO;
 import com.test.backend.models.Book;
@@ -9,12 +10,15 @@ import com.test.backend.permissions.ReviewPermissions;
 import com.test.backend.repositories.BookRepository;
 import com.test.backend.repositories.ReviewRepository;
 import com.test.backend.utilities.UserUtils;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -115,5 +119,65 @@ public class ReviewServices {
 
 
     // Find by book
+    public ResponseEntity<JsonResponse<Object>> findByBook(String isbn) {
+        Optional<Book> checkBook = bookRepository.findById(isbn);
+        JsonResponse<Object> response = new JsonResponse<>();
+        if (checkBook.isEmpty()) {
+            response.setMessage("Book with isbn " + isbn + " does not exists");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
 
+        Book book = checkBook.get();
+
+        HashMap<String, Object> data = new HashMap<>();
+
+        List<Review> allReview = reviewRepository.findByBook(book);
+        List<ReviewDTO> reviewDTOs = allReview.stream().map(ReviewDTO::new).toList();
+
+        data.put("books", new BookDTO(book));
+        data.put("reviews", reviewDTOs);
+
+        response.setMessage("All review for book with isbn " + isbn + " is successfully fetched");
+        response.setData(data);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+    // Find One
+    public ResponseEntity<JsonResponse<Object>> findOne(Integer id) {
+        Optional<Review> checkReview = reviewRepository.findById(id);
+        JsonResponse<Object> response = new JsonResponse<>();
+        if (checkReview.isEmpty()) {
+            response.setMessage("Review with id " + id + " does not exists");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        response.setMessage("Review with id " + id + " successfully retrieved");
+        response.setData(new ReviewDTO(checkReview.get()));
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
+
+    // Find All
+    public ResponseEntity<JsonResponse<Object>> findAll() {
+        JsonResponse<Object> response = new JsonResponse<>();
+
+        // Authorization
+        AuthResult authResult = reviewPermissions.checkFindAll();
+        if (!authResult.isAllowed()) {
+            response.setMessage(authResult.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        List<Review> allReview = reviewRepository.findAll();
+        List<ReviewDTO> review = allReview.stream().map(ReviewDTO::new).toList();
+
+        response.setMessage("All review successfully fetched");
+        response.setData(review);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
