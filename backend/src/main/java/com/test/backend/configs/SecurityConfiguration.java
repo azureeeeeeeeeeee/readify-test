@@ -31,8 +31,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/auth/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.GET, "/books/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.GET, "/review/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/books/**", "/books").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/review/**", "/review").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
