@@ -30,4 +30,19 @@ public class CommentController {
         return commentServices.updateComment(comment, id);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<JsonResponse<Object>> findOne(@PathVariable Integer id) {
+        return commentServices.findOne(id);
+    }
+
+    @GetMapping
+    public ResponseEntity<JsonResponse<Object>> findAll() {
+        return commentServices.findAll();
+    }
+
+    @GetMapping("/{id}/review")
+    public ResponseEntity<JsonResponse<Object>> findBbyReview(@PathVariable Integer id) {
+        return commentServices.findByReview(id);
+    }
+
 }

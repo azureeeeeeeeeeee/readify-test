@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                     authorize.requestMatchers("/auth/**").permitAll();
                     authorize.requestMatchers(HttpMethod.GET, "/books/**", "/books").permitAll();
                     authorize.requestMatchers(HttpMethod.GET, "/review/**", "/review").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/comment/**", "/comment").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)

@@ -34,4 +34,12 @@ public class CommentPermissions {
 
         return new AuthResult(true, null);
     }
+
+    public AuthResult checkFindAll() {
+        if (userUtils.getAdminStatus()) {
+            return new AuthResult(true, null);
+        }
+
+        return new AuthResult(false, "You are not authorized");
+    }
 }
